@@ -122,6 +122,8 @@ def evaluate(x, env):
         if var in env:
             raise Exception("Redifinition of \"%s\" is not allowed!" % var)
         env[var] = evaluate(exp, env)
+        # Assign a name to the procedure
+        if isinstance(env[var], Procedure): setattr(env[var], "name", var)
         return env[var]
     # (lambda (var...) body)
     elif x[0] == 'lambda':
@@ -164,7 +166,11 @@ def lispify(expression):
         return '(' + ' '.join(map(lispify, expression)) + ')'
     # It's a lambda function
     elif isinstance(expression, Procedure):
-        return "<lambda%s impl: %s>" % (lispify(expression.params), str(expression))
+        proc = expression
+        if hasattr(proc, "name"):
+            return "<function %s%s, impl: %s>" % (proc.name, lispify(proc.params), str(proc))
+        else:
+            return "<lambda%s, impl: %s>" % (lispify(proc.params), str(proc))
     # Convert booleans into the Lisp representation
     elif isinstance(expression, bool):
         return "#t" if expression else "#f"
