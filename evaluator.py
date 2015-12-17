@@ -159,12 +159,12 @@ def load_file(name, env):
 
 def lispify(expression):
     """ Converts a Python object into a Lisp-readable string"""
-    # If it's a list, print recursively
+    # Print lists recursively
     if isinstance(expression, list):
         return '(' + ' '.join(map(lispify, expression)) + ')'
-    # It's a function we can call and convert a return value
-    elif callable(expression):
-        return lispify(expression())
+    # It's a lambda function
+    elif isinstance(expression, Procedure):
+        return "<lambda%s impl: %s>" % (lispify(expression.params), str(expression))
     # Convert booleans into the Lisp representation
     elif isinstance(expression, bool):
         return "#t" if expression else "#f"
