@@ -37,6 +37,14 @@
 	(assert (equal? (not '(3)) #f))
 	(assert (equal? (not '()) #f))
 
+	(define min(lambda (a b)
+		(if (> a b) b a)
+	))
+
+	(define max(lambda (a b)
+		(if (< a b) b a)
+	))
+
 	; ========================================================
 	; TYPES
 	; ========================================================
@@ -50,6 +58,20 @@
 	; ========================================================
 	; LISTS
 	; ========================================================
+
+	(define min-list(lambda (list)
+		(if (= (length list) 1)
+			(car list)
+			(min (car list) (min-list (cdr list)))
+		)
+	))
+
+	(define max-list(lambda (list)
+		(if (= (length list) 1)
+			(car list)
+			(max (car list) (max-list (cdr list)))
+		)
+	))
 
 	; ------------------
 	; <reverse>
