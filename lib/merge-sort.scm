@@ -8,7 +8,6 @@
 
 	; Merges two *sorted* lists in a single one (also sorted)
 	(define merge-lists (lambda (lhs rhs)
-		; if any of the list is empty we simply return the other one
 		(cond
 			((null? lhs) rhs)
 			((null? rhs) lhs)
@@ -16,7 +15,8 @@
 				(if (>= (car lhs) (car rhs))
 					(cons (car rhs) (merge-lists lhs (cdr rhs)))
 					(cons (car lhs) (merge-lists (cdr lhs) rhs))
-			))
+				)
+			)
 		)
 		;
 		; An alternative implementation using `if` instead of `cond`
