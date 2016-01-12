@@ -210,7 +210,7 @@
 	; <reverse>
 	; ------------------
 	; Returns a reversed list.
-	; If x isn't a list, this function is no-op
+	; If x isn't a list, returns x
 	(define reverse (lambda (x)
 		(if (or (null? x) (not (list? x)))
 			x
