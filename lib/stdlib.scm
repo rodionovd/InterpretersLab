@@ -178,15 +178,25 @@
 		(equal? (abs (remainder x 2)) 1)
 	))
 
-	(assert (odd? 1)) (assert (odd? 3)) (assert (odd? 1813))
-	(assert (not (odd? 2))) (assert (not (odd? 8724))) (assert (not (odd? 0)))
+	(assert (odd? 1))
+	(assert (odd? 3))
+	(assert (odd? 1813))
+
+	(assert (not (odd? 2)))
+	(assert (not (odd? 8724)))
+	(assert (not (odd? 0)))
 
 	(define even? (lambda (x)
 		(equal? (abs (remainder x 2)) 0)
 	))
 
-	(assert (even? 2)) (assert (even? 8724)) (assert (even? 0))
-	(assert (not (even? 3))) (assert (not (even? 8971))) (assert (not (even? 1)))
+	(assert (even? 2))
+	(assert (even? 8724))
+	(assert (even? 0))
+
+	(assert (not (even? 3)))
+	(assert (not (even? 8971)))
+	(assert (not (even? 1)))
 
 	; ========================================================
 	; LISTS
