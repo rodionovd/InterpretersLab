@@ -56,6 +56,124 @@
 	(assert (equal? (boolean? <=) #f))
 
 	; ========================================================
+	; MATH
+	; ========================================================
+
+	; Some useful constants
+	(define EPS 0.000001)
+	(define PI 3.141592653589793)
+
+	; Calculates a factorial of `n`
+	; n >= 0
+	(define fact (lambda (n)
+		(begin
+			;; define a helper function for accumulating results
+			(define factorial (lambda (n acc)
+				(if (= n 0)
+					acc
+					(factorial (- n 1) (* n acc))
+				)
+			))
+			; call the helper
+			(factorial n 1)
+		)
+	))
+
+	(assert (equal? (fact 0) 1))
+	(assert (equal? (fact 1) 1))
+	(assert (equal? (fact 6) 720))
+	(assert (equal? (fact 50) 30414093201713378043612608166064768844377641568960512000000000000))
+
+	; Returns x raised to the power of y.
+	; y must be >= 0
+	(define ^ (lambda (x y)
+		(if (equal? y 0)
+			1
+			; TODO: optimize for x=0
+			(if (equal? y 1)
+				x
+				(* x (^ x (- y 1)))
+			)
+		)
+	))
+
+	(assert (equal? (^ 0 0) 1))
+	(assert (equal? (^ 0 9) 0))
+	(assert (equal? (^ 2 0) 1))
+	(assert (equal? (^ 2 1) 2))
+	(assert (equal? (^ 2 10) 1024))
+	(assert (equal? (^ -2 2) 4))
+	(assert (equal? (^ -2 3) -8))
+
+	; x*x, x^2
+	(define square (lambda (x)
+		(^ x 2)
+	))
+
+	(assert (equal? (square 2) 4))
+	(assert (equal? (square -2) 4))
+	(assert (equal? (square 0) 0))
+
+	(define abs (lambda (x)
+		(if (< x 0) (- 0 x) x)
+	))
+
+	(assert (equal? (abs 3) (abs -3)))
+	(assert (equal? (abs 0) 0))
+
+	; Each iteration of the algorithm improves the guess for a litle
+	(define sqrt-iter (lambda (guess x)
+		(if (newton-sqrt-good-enough? guess x)
+			guess
+			(sqrt-iter (improve-newton-sqrt-guess guess x) x)
+		)
+	))
+
+	; new_guess = (old_guess + (x/old_guess)) / 2
+	(define improve-newton-sqrt-guess (lambda (guess x)
+		(average guess (/ x guess))
+	))
+
+	; Returns T if the difference between guess^2 and x is less than EPS
+	(define newton-sqrt-good-enough? (lambda (guess x)
+		(< (abs (- (square guess) x)) EPS)
+	))
+
+	; Return the average of two numbers
+	(define average (lambda (x y)
+		(/ (+ x y) 2)
+	))
+
+	; Returns a square root of x. Based on Newton's method.
+	; x >= 0 since we don't support complex numbers (yet?)
+	(define sqrt (lambda (x)
+		(if (equal? x 0)
+			0
+			(sqrt-iter 1.0 x)
+		)
+	))
+
+	(assert (and (> (sqrt 9) 3) (< (sqrt 9) (+ 3 EPS))))
+	(assert (equal? (sqrt 0) 0))
+
+	; Modulo
+	(define modulo (lambda (x y)
+		(- x (* y (flooring (/ x y))))
+	))
+
+	(define remainder modulo)
+
+	(assert (equal? (modulo 0 1) 0))
+	(assert (equal? (modulo 1 1) 0))
+	(assert (equal? (modulo 3 2) 1))
+	(assert (equal? (modulo 12 5) 2))
+	(assert (equal? (modulo -12 5) 3))
+	(assert (equal? (modulo 12 5) 2))
+	(assert (equal? (modulo -78 33) 21))
+	(assert (equal? (modulo 78 33) 12))
+	(assert (equal? (modulo 5 89) 5))
+
+	; ========================================================
 	; LISTS
 	; ========================================================
 
@@ -256,122 +374,4 @@
 	(assert (equal? '(1 3 5 7) (filter '(1 2 3 4 5 6 7) (lambda (x)
 		(equal? 1 (remainder x 2))
 	))))
-
-	; ========================================================
-	; MATH
-	; ========================================================
-
-	; Some useful constants
-	(define EPS 0.000001)
-	(define PI 3.141592653589793)
-
-	; Calculates a factorial of `n`
-	; n >= 0
-	(define fact (lambda (n)
-		(begin
-			;; define a helper function for accumulating results
-			(define factorial (lambda (n acc)
-				(if (= n 0)
-					acc
-					(factorial (- n 1) (* n acc))
-				)
-			))
-			; call the helper
-			(factorial n 1)
-		)
-	))
-
-	(assert (equal? (fact 0) 1))
-	(assert (equal? (fact 1) 1))
-	(assert (equal? (fact 6) 720))
-	(assert (equal? (fact 50) 30414093201713378043612608166064768844377641568960512000000000000))
-
-	; Returns x raised to the power of y.
-	; y must be >= 0
-	(define ^ (lambda (x y)
-		(if (equal? y 0)
-			1
-			; TODO: optimize for x=0
-			(if (equal? y 1)
-				x
-				(* x (^ x (- y 1)))
-			)
-		)
-	))
-
-	(assert (equal? (^ 0 0) 1))
-	(assert (equal? (^ 0 9) 0))
-	(assert (equal? (^ 2 0) 1))
-	(assert (equal? (^ 2 1) 2))
-	(assert (equal? (^ 2 10) 1024))
-	(assert (equal? (^ -2 2) 4))
-	(assert (equal? (^ -2 3) -8))
-
-	; x*x, x^2
-	(define square (lambda (x)
-		(^ x 2)
-	))
-
-	(assert (equal? (square 2) 4))
-	(assert (equal? (square -2) 4))
-	(assert (equal? (square 0) 0))
-
-	(define abs (lambda (x)
-		(if (< x 0) (- 0 x) x)
-	))
-
-	(assert (equal? (abs 3) (abs -3)))
-	(assert (equal? (abs 0) 0))
-
-	; Each iteration of the algorithm improves the guess for a litle
-	(define sqrt-iter (lambda (guess x)
-		(if (newton-sqrt-good-enough? guess x)
-			guess
-			(sqrt-iter (improve-newton-sqrt-guess guess x) x)
-		)
-	))
-
-	; new_guess = (old_guess + (x/old_guess)) / 2
-	(define improve-newton-sqrt-guess (lambda (guess x)
-		(average guess (/ x guess))
-	))
-
-	; Returns T if the difference between guess^2 and x is less than EPS
-	(define newton-sqrt-good-enough? (lambda (guess x)
-		(< (abs (- (square guess) x)) EPS)
-	))
-
-	; Return the average of two numbers
-	(define average (lambda (x y)
-		(/ (+ x y) 2)
-	))
-
-	; Returns a square root of x. Based on Newton's method.
-	; x >= 0 since we don't support complex numbers (yet?)
-	(define sqrt (lambda (x)
-		(if (equal? x 0)
-			0
-			(sqrt-iter 1.0 x)
-		)
-	))
-
-	(assert (and (> (sqrt 9) 3) (< (sqrt 9) (+ 3 EPS))))
-	(assert (equal? (sqrt 0) 0))
-
-	; Modulo
-	(define modulo (lambda (x y)
-		(- x (* y (flooring (/ x y))))
-	))
-
-	(define remainder modulo)
-
-	(assert (equal? (modulo 0 1) 0))
-	(assert (equal? (modulo 1 1) 0))
-	(assert (equal? (modulo 3 2) 1))
-	(assert (equal? (modulo 12 5) 2))
-	(assert (equal? (modulo -12 5) 3))
-	(assert (equal? (modulo 12 5) 2))
-	(assert (equal? (modulo -78 33) 21))
-	(assert (equal? (modulo 78 33) 12))
-	(assert (equal? (modulo 5 89) 5))
 )
