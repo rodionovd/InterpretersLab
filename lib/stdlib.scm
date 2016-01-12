@@ -94,7 +94,7 @@
 	; <foldr>
 	; ------------------
 	; Fold to the right.
-	; What kind of value it will return depend entirely on
+	; What kind of value it will return depends entirely on
 	; the accumulator and the function
 	(define foldr (lambda (func acc list)
 		(if (null? list)
@@ -240,6 +240,22 @@
 	(assert (equal? (negative? 0) #f))
 	(assert (equal? (negative? 1) #f))
 
+	(define filter (lambda (list predicate)
+		(foldr
+			; only add those items from `list` for which
+			; (predicate item) equals true
+			(lambda (acc item)
+				(if (predicate item) (cons acc item) acc)
+			)
+			; starting with an empty list
+			'()
+			list
+		)
+	))
+
+	(assert (equal? '(1 3 5 7) (filter '(1 2 3 4 5 6 7) (lambda (x)
+		(equal? 1 (remainder x 2))
+	))))
 
 	; ========================================================
 	; MATH
