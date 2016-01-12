@@ -386,9 +386,7 @@
 		)
 	))
 
-	(assert (equal? '(1 3 5 7) (filter '(1 2 3 4 5 6 7) (lambda (x)
-		(equal? 1 (remainder x 2))
-	))))
+	(assert (equal? '(1 3 5 7) (filter '(1 2 3 4 5 6 7) (lambda (x) (odd? x)))))
 	(assert (equal? '() (filter '() null?) ))
 	(assert (equal? '() (filter '() (lambda (x) #t))))
 	(assert (equal?
