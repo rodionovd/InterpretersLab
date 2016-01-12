@@ -374,4 +374,14 @@
 	(assert (equal? '(1 3 5 7) (filter '(1 2 3 4 5 6 7) (lambda (x)
 		(equal? 1 (remainder x 2))
 	))))
+	(assert (equal? '() (filter '() null?) ))
+	(assert (equal? '() (filter '() (lambda (x) #t))))
+	(assert (equal?
+			'(foo bar)
+			(filter '(foo bar) (lambda (x) #t))
+	))
+	(assert (equal?
+			'()
+			(filter '(foo bar) (lambda (x) #f))
+	))
 )
