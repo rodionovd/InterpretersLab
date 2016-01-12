@@ -151,8 +151,6 @@ def evaluate(x, env):
         args = [evaluate(arg, env) for arg in x[1:]]
         if isinstance(proc, Procedure):
             check_procedure_args(proc, x[0], args)
-        # if not callable(proc):
-        #     raise Exception(x[0])
         return proc(*args)
 
 def load_file(name, env):
