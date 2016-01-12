@@ -358,14 +358,14 @@
 	(assert (equal? (negative? 0) #f))
 	(assert (equal? (negative? 1) #f))
 
+	; Returns a list containing only add those items from `list`
+	; for which (predicate item) equals true.
+	; Thus, `predicate` must be a single-argument lambda.
 	(define filter (lambda (list predicate)
 		(foldr
-			; only add those items from `list` for which
-			; (predicate item) equals true
 			(lambda (acc item)
 				(if (predicate item) (cons acc item) acc)
 			)
-			; starting with an empty list
 			'()
 			list
 		)
